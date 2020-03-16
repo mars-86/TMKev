@@ -1,0 +1,5 @@
+﻿  main.c
+  winev.c
+F:\Programacion\Cpp\GitHub\EvHandler\TMKev\TMKev\winev.c(45,23): warning C4018: '<': no coinciden signed/unsigned
+  Generando código...
+  TMKev.vcxproj -> F:\Programacion\Cpp\GitHub\EvHandler\TMKev\Debug\TMKev.exe
