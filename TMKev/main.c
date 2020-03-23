@@ -42,12 +42,12 @@ LRESULT CALLBACK term_proc(HANDLE h, UINT e, WPARAM w, LPARAM l)
                 printf("%d,", TMKEV_MOUSE_GET_X_COORD(l));
                 printf("%d", TMKEV_MOUSE_GET_Y_COORD(l));
                 break;
-                /*case DOUBLE_CLICK:
+            case DOUBLE_CLICK:
                 printf("%s", "DC");
                 printf("%d,", TMKEV_MOUSE_GET_X_COORD(l));
                 printf("%d", TMKEV_MOUSE_GET_Y_COORD(l));
                 break;
-            case MOUSE_WHEELED:
+            /*case MOUSE_WHEELED:
                 printf("%s", "Wheel");
                 break;*/
             default:
