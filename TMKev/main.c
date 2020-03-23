@@ -21,10 +21,10 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-LRESULT CALLBACK term_proc(HANDLE h, UINT m, WPARAM p, LPARAM l)
+LRESULT CALLBACK term_proc(HANDLE h, UINT e, WPARAM w, LPARAM l)
 {
-    if (p == KEY_EVENT) {
-        switch (l) {
+    if (TMKEV_GET_EVENT_TYPE(e) == KEY_EVENT) {
+        switch (w) {
         case VK_ESCAPE:
             printf("%s", "ESC");
             break;
@@ -36,19 +36,41 @@ LRESULT CALLBACK term_proc(HANDLE h, UINT m, WPARAM p, LPARAM l)
             //printf("%d", l);
         }
     }
-    else if (p == MOUSE_EVENT) {
-        switch (l) {
-        case VK_LBUTTON:
-            printf("%s", "LB");
-            break;
-        case VK_RBUTTON:
-            printf("%s", "RB");
-            break;
-        case VK_MBUTTON:
-            printf("%s", "MB");
-            break;
-        default:
-            ;
+    else if (TMKEV_GET_EVENT_TYPE(e) == MOUSE_EVENT) {
+        switch (TMKEV_GET_EVENT_STYPE(e)) {
+            /*case MOUSE_MOVED:
+                printf("%d,", TMKEV_MOUSE_GET_X_COORD(l));
+                printf("%d", TMKEV_MOUSE_GET_Y_COORD(l));
+                break;
+            case DOUBLE_CLICK:
+                printf("%s", "DC");
+                printf("%d,", TMKEV_MOUSE_GET_X_COORD(l));
+                printf("%d", TMKEV_MOUSE_GET_Y_COORD(l));
+                break;
+            case MOUSE_WHEELED:
+                printf("%s", "Wheel");
+                break;*/
+            default:
+                switch (TMKEV_GET_MOUSE_BUTTON_STATUS(w)) {
+                case VK_LBUTTON:
+                    printf("%s", "LB");
+                    printf("%d,", TMKEV_MOUSE_GET_X_COORD(l));
+                    printf("%d", TMKEV_MOUSE_GET_Y_COORD(l));
+                    break;
+                case VK_RBUTTON:
+                    printf("%s", "RB");
+                    printf("%d,", TMKEV_MOUSE_GET_X_COORD(l));
+                    printf("%d", TMKEV_MOUSE_GET_Y_COORD(l));
+                    break;
+                case VK_MBUTTON:
+                    printf("%s", "MB");
+                    printf("%d,", TMKEV_MOUSE_GET_X_COORD(l));
+                    printf("%d", TMKEV_MOUSE_GET_Y_COORD(l));
+                    break;
+                default:
+                    ;
+                }
+
         }
     }
     else {

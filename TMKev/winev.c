@@ -58,27 +58,38 @@ int read_event(void)
 
 int dispatch_event(void)
 {
-    int i;
+    int i, ev = 0, wparam = 0, lparam = 0;
     // Dispatch the events to the appropriate handler.
     for (i = 0; i < records_read; ++i){
-        if (read_buff[i].EventType == KEY_EVENT){
+        ev = read_buff[i].EventType;
+        if (ev == KEY_EVENT){
             if (read_buff[i].Event.KeyEvent.bKeyDown == TRUE){
                 read_buff[i].Event.KeyEvent.bKeyDown; // KEY_DOWN EV
                 _tc.lpfnTermProc(
                     _stdinh,
-                    0,
                     read_buff[i].EventType,
-                    read_buff[i].Event.KeyEvent.uChar.AsciiChar
+                    read_buff[i].Event.KeyEvent.uChar.AsciiChar,
+                    0
                 );
             }
         }
-        if (read_buff[i].EventType == MOUSE_EVENT){
-            _tc.lpfnTermProc(
-                _stdinh,
-                0,
-                read_buff[i].EventType,
-                read_buff[i].Event.MouseEvent.dwButtonState
-            );
+        if (ev == MOUSE_EVENT){
+            
+            lparam = ((lparam | read_buff[i].Event.MouseEvent.dwMousePosition.X) << 16) | read_buff[i].Event.MouseEvent.dwMousePosition.Y;
+            switch (read_buff[i].Event.MouseEvent.dwEventFlags) {
+            case MOUSE_MOVED:
+                ev |= (read_buff[i].Event.MouseEvent.dwEventFlags << 16);
+                wparam = ((wparam | read_buff[i].Event.MouseEvent.dwControlKeyState) << 16) | read_buff[i].Event.MouseEvent.dwButtonState;
+                break;
+            case MOUSE_WHEELED:
+                ev |= (read_buff[i].Event.MouseEvent.dwEventFlags << 16);
+                wparam = ((wparam | read_buff[i].Event.MouseEvent.dwControlKeyState) << 16) | read_buff[i].Event.MouseEvent.dwButtonState;
+                break;
+            default:
+                ev |= (read_buff[i].Event.MouseEvent.dwEventFlags << 16);
+                wparam = ((wparam | read_buff[i].Event.MouseEvent.dwControlKeyState) << 16) | read_buff[i].Event.MouseEvent.dwButtonState;
+            }
+            _tc.lpfnTermProc(_stdinh, ev, wparam, lparam);
         }
     }
     return 0;
