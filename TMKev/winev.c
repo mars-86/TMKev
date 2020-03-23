@@ -58,70 +58,23 @@ int read_event(void)
 
 int dispatch_event(void)
 {
-    int i;
+    int i, ev = 0, wparam = 0, lparam = 0;
     // Dispatch the events to the appropriate handler.
     for (i = 0; i < records_read; ++i){
-        if (read_buff[i].EventType == KEY_EVENT){
-            if (read_buff[i].Event.KeyEvent.bKeyDown == TRUE){
-                read_buff[i].Event.KeyEvent.bKeyDown; // KEY_DOWN EV
-                _tc.lpfnTermProc(
-                    _stdinh,
-                    0,
-                    read_buff[i].EventType,
-                    read_buff[i].Event.KeyEvent.uChar.AsciiChar
-                );
-            }
+        ev = read_buff[i].EventType;
+        if (ev == KEY_EVENT){
+            KEY_EVENT_RECORD ker = read_buff[i].Event.KeyEvent;
+            ev = (read_buff[i].Event.KeyEvent.bKeyDown) ? (ev | (1 << 16)) : (ev | (0 << 16));
+            wparam = ((wparam | ker.dwControlKeyState) << 16) | ker.wRepeatCount;
+            lparam = ((lparam | ker.uChar.UnicodeChar) << 16) | ker.uChar.AsciiChar;
         }
-        if (read_buff[i].EventType == MOUSE_EVENT){
-            _tc.lpfnTermProc(
-                _stdinh,
-                0,
-                read_buff[i].EventType,
-                read_buff[i].Event.MouseEvent.dwButtonState
-            );
+        if (ev == MOUSE_EVENT){
+            MOUSE_EVENT_RECORD mer = read_buff[i].Event.MouseEvent;
+            ev |= (mer.dwEventFlags << 16);
+            wparam = ((wparam | mer.dwControlKeyState) << 16) | mer.dwButtonState;
+            lparam = ((lparam | mer.dwMousePosition.Y) << 16) | mer.dwMousePosition.X;
         }
+        _tc.lpfnTermProc(_stdinh, ev, wparam, lparam);
     }
     return 0;
 }
-
-/*
-    INPUT_RECORD irInBuf[128];
-    int i, run = 1;
-    while (run)
-    {
-        // Wait for the events.
-        if (!ReadConsoleInput(
-            _stdinh,     // input buffer handle 
-            irInBuf,    // buffer to read into 
-            128,        // size of read buffer 
-            &cNumRead)) // number of records read
-        {
-            fprintf(stderr, "Error Read %u", GetLastError());
-            exit(1);
-        }
-        // Dispatch the events to the appropriate handler.
-        for (i = 0; i < cNumRead; ++i) {
-            if (irInBuf[i].EventType == KEY_EVENT) {
-                if (irInBuf[i].Event.KeyEvent.bKeyDown == TRUE) {
-                    irInBuf[i].Event.KeyEvent.bKeyDown; // KEY_DOWN EV
-                    run = _tc.lpfnTermProc(
-                        _stdinh,
-                        0,
-                        irInBuf[i].EventType,
-                        irInBuf[i].Event.KeyEvent.uChar.AsciiChar
-                    );
-                }
-            }
-            if (irInBuf[i].EventType == MOUSE_EVENT) {
-                run = _tc.lpfnTermProc(
-                    _stdinh,
-                    0,
-                    irInBuf[i].EventType,
-                    irInBuf[i].Event.MouseEvent.dwButtonState
-                );
-            }
-        }
-    }
-    return 0;
-}
-*/
