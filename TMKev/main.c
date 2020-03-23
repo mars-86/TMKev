@@ -38,11 +38,11 @@ LRESULT CALLBACK term_proc(HANDLE h, UINT e, WPARAM w, LPARAM l)
     }
     else if (TMKEV_GET_EVENT_TYPE(e) == MOUSE_EVENT) {
         switch (TMKEV_GET_EVENT_STYPE(e)) {
-            /*case MOUSE_MOVED:
+            case MOUSE_MOVED:
                 printf("%d,", TMKEV_MOUSE_GET_X_COORD(l));
                 printf("%d", TMKEV_MOUSE_GET_Y_COORD(l));
                 break;
-            case DOUBLE_CLICK:
+                /*case DOUBLE_CLICK:
                 printf("%s", "DC");
                 printf("%d,", TMKEV_MOUSE_GET_X_COORD(l));
                 printf("%d", TMKEV_MOUSE_GET_Y_COORD(l));
