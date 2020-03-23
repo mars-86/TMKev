@@ -74,21 +74,9 @@ int dispatch_event(void)
             }
         }
         if (ev == MOUSE_EVENT){
-            
+            ev |= (read_buff[i].Event.MouseEvent.dwEventFlags << 16);
+            wparam = ((wparam | read_buff[i].Event.MouseEvent.dwControlKeyState) << 16) | read_buff[i].Event.MouseEvent.dwButtonState;
             lparam = ((lparam | read_buff[i].Event.MouseEvent.dwMousePosition.X) << 16) | read_buff[i].Event.MouseEvent.dwMousePosition.Y;
-            switch (read_buff[i].Event.MouseEvent.dwEventFlags) {
-            case MOUSE_MOVED:
-                ev |= (read_buff[i].Event.MouseEvent.dwEventFlags << 16);
-                wparam = ((wparam | read_buff[i].Event.MouseEvent.dwControlKeyState) << 16) | read_buff[i].Event.MouseEvent.dwButtonState;
-                break;
-            case MOUSE_WHEELED:
-                ev |= (read_buff[i].Event.MouseEvent.dwEventFlags << 16);
-                wparam = ((wparam | read_buff[i].Event.MouseEvent.dwControlKeyState) << 16) | read_buff[i].Event.MouseEvent.dwButtonState;
-                break;
-            default:
-                ev |= (read_buff[i].Event.MouseEvent.dwEventFlags << 16);
-                wparam = ((wparam | read_buff[i].Event.MouseEvent.dwControlKeyState) << 16) | read_buff[i].Event.MouseEvent.dwButtonState;
-            }
             _tc.lpfnTermProc(_stdinh, ev, wparam, lparam);
         }
     }
