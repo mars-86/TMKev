@@ -47,9 +47,9 @@ LRESULT CALLBACK term_proc(HANDLE h, UINT e, WPARAM w, LPARAM l)
                 printf("%d,", TMKEV_MOUSE_GET_X_COORD(l));
                 printf("%d", TMKEV_MOUSE_GET_Y_COORD(l));
                 break;
-            /*case MOUSE_WHEELED:
+            case MOUSE_WHEELED:
                 printf("%s", "Wheel");
-                break;*/
+                break;
             default:
                 switch (TMKEV_GET_MOUSE_BUTTON_STATUS(w)) {
                 case VK_LBUTTON:
