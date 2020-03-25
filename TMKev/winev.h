@@ -14,6 +14,9 @@
 #define TMKEV_GET_CONTROL_KEY_STATUS(mb) ((mb & 0xFFFF0000) >> 16)
 #define TMKEV_MOUSE_GET_X_COORD(coords) (coords & 0x0000FFFF)
 #define TMKEV_MOUSE_GET_Y_COORD(coords) ((coords & 0xFFFF0000) >> 16)
+#define TMKEV_WSIZE_GET_X_COORD(size) (size & 0x0000FFFF)
+#define TMKEV_WSIZE_GET_Y_COORD(size) ((size & 0xFFFF0000) >> 16)
+
 typedef LRESULT(_stdcall* TERMPROC)(HANDLE, UINT, WPARAM, LPARAM);
 
 typedef struct _TermClass {
@@ -34,5 +37,6 @@ int init_event_handler(void);
 int get_event(void);
 int read_event(void);
 int dispatch_event(void);
+void stop_event_handler(void);
 
 #endif // !TMKEV_WINEV_H

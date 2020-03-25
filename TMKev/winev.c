@@ -74,7 +74,16 @@ int dispatch_event(void)
             wparam = ((wparam | mer.dwControlKeyState) << 16) | mer.dwButtonState;
             lparam = ((lparam | mer.dwMousePosition.Y) << 16) | mer.dwMousePosition.X;
         }
+        if (ev == WINDOW_BUFFER_SIZE_EVENT){
+            WINDOW_BUFFER_SIZE_RECORD wbs = read_buff[i].Event.WindowBufferSizeEvent;
+            lparam = ((lparam | wbs.dwSize.Y) << 16) | wbs.dwSize.X;
+        }
         _tc.lpfnTermProc(_stdinh, ev, wparam, lparam);
     }
     return 0;
+}
+
+void stop_event_handler(void)
+{
+    reading_events = 0;
 }
