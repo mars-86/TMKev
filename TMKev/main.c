@@ -27,7 +27,7 @@ LRESULT CALLBACK term_proc(HANDLE h, UINT e, WPARAM w, LPARAM l)
         if (TMKEV_KEYB_EVENT_IS_KEY_PRESSED(e)) {
             switch (TMKEV_KEYB_GET_KEY_AS_ASCII(l)) {
             case VK_ESCAPE:
-                printf("%s", "ESC");
+                stop_event_handler();
                 break;
             case VK_KEY_W_LOW:
                 printf("%s", "w");
@@ -64,6 +64,9 @@ LRESULT CALLBACK term_proc(HANDLE h, UINT e, WPARAM w, LPARAM l)
                 ;
             }
         }
+    }
+    else if (TMKEV_GET_EVENT_TYPE(e) == WINDOW_BUFFER_SIZE_EVENT){
+        printf("WS: %d,%d,", TMKEV_WSIZE_GET_X_COORD(l), TMKEV_WSIZE_GET_Y_COORD(l));
     }
     else {
 
