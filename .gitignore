@@ -37,3 +37,12 @@ VTGraph/Debug/
 x64/
 x32/
 Debug
+
+# Codeblocks Folders
+bin/
+obj/
+
+# Codeblocks project
+*.cbp
+*.depend
+*.layout

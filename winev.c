@@ -41,18 +41,33 @@ int get_event(void)
     return reading_events;
 }
 
-int read_event(void)
+int read_event_block(void)
 {
     // Wait for the events.
     if (!ReadConsoleInput(
-        _stdinh,                // input buffer handle 
-        read_buff,              // buffer to read into 
-        TMKEV_READ_BUFF_SIZE,   // size of read buffer 
+        _stdinh,                // input buffer handle
+        read_buff,              // buffer to read into
+        TMKEV_READ_BUFF_SIZE,   // size of read buffer
         &records_read))         // number of records read
     {
         fprintf(stderr, "ReadConsoleInput: %u", GetLastError());
         return -1;
     }
+    return 0;
+}
+
+int read_event_non_block(void)
+{
+    if (!PeekConsoleInput(
+        _stdinh,                // input buffer handle
+        read_buff,              // buffer to read into
+        TMKEV_READ_BUFF_SIZE,   // size of read buffer
+        &records_read))         // number of records read
+    {
+        fprintf(stderr, "PeekConsoleInput: %u", GetLastError());
+        return -1;
+    }
+    if (records_read) FlushConsoleInputBuffer(_stdinh);
     return 0;
 }
 

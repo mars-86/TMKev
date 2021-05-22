@@ -8,13 +8,13 @@ int main(int argc, char *argv[])
     TermClass tc;
     tc.cbSize = sizeof(tc);
     tc.lpfnTermProc = term_proc;
-    
+
     init_event_handler();
     register_term_class(&tc);
 
     while (get_event()){
         // read incomming events
-        read_event();
+        read_event_non_block();
         // dispatch events to handler
         dispatch_event();
     }
